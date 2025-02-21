@@ -1,4 +1,4 @@
-reverse-proxy-lb/
+````reverse-proxy-lb/
 │── cmd/
 │   ├── main.go          # Entry point of the application
 │
@@ -20,5 +20,5 @@ reverse-proxy-lb/
 │── go.mod               # Go module file
 │── go.sum               # Dependencies checksum
 │── README.md            # Project documentation
-
+````
 Planning to implement with the following structure
