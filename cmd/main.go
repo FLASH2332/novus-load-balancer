@@ -3,22 +3,23 @@ package main
 import (
 	"fmt"
 	"log"
-
+	"net/http"
 	"github.com/FLASH2332/novus-load-balancer/config"
 	"github.com/FLASH2332/novus-load-balancer/internal/proxy"
-	"net/http"
 )
 
 func main() {
 	// Load configuration
 	config.LoadConfig("config/config.yaml")
 
-	// Create a new reverse proxy
-	reverseProxy := proxy.NewReverseProxy(config.Cfg.Proxy.Targets)
+	// Choose strategy from config
+	strategy := config.Cfg.LoadBalancer.Strategy // "round_robin" or "least_connections"
+
+	// Create the reverse proxy
+	reverseProxy := proxy.NewReverseProxy(config.Cfg.Proxy.Targets, strategy)
 
 	// Start the server
 	port := config.Cfg.Server.Port
-	fmt.Printf("Reverse Proxy running on port %d\n", port)
+	fmt.Printf("Reverse Proxy running on port %d with %s strategy\n", port, strategy)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), reverseProxy))
-
 }
