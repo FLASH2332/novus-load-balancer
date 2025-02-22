@@ -1,0 +1,15 @@
+# Go-related ignores
+bin/
+*.exe
+*.log
+*.out
+*.test
+
+# Vendor dependencies
+vendor/
+
+# Go modules
+go.sum
+
+# Configs & Secrets (optional)
+config/*.yaml
