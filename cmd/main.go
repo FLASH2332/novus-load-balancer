@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
 	"github.com/FLASH2332/novus-load-balancer/config"
 	"github.com/FLASH2332/novus-load-balancer/internal/proxy"
 )
@@ -13,7 +14,7 @@ func main() {
 	config.LoadConfig("config/config.yaml")
 
 	// Choose strategy from config
-	strategy := config.Cfg.LoadBalancer.Strategy // "round_robin" or "least_connections"
+	strategy := config.Cfg.LoadBalancer.Strategy
 
 	// Create the reverse proxy
 	reverseProxy := proxy.NewReverseProxy(config.Cfg.Proxy.Targets, strategy)
