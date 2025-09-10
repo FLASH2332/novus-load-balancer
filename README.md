@@ -43,7 +43,7 @@ Works similar to servers of NGINX.
 
 ## Architecture Diagram
 
-![Diagram](Architecture.png)
+![Diagram](assets/Architecture.png)
 
 ## Usage 
 1. Configure YAML for Proxy
