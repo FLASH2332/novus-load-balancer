@@ -1,35 +1,48 @@
 package cache
 
-// A simple cache
-type Cache struct {
-    data  map[string][]byte
-    order []string
-    cap   int
+import "github.com/FLASH2332/novus-load-balancer/pkg"
+
+// LRUCache struct
+type LRUCache struct {
+	capacity int
+	data     map[string]*pkg.Node
+	order    *pkg.DoublyLinkedList
 }
 
-func NewCache(capacity int) *Cache {
-    return &Cache{
-        data:  make(map[string][]byte),
-        order: make([]string, 0, capacity),
-        cap:   capacity,
-    }
+func NewLRUCache(capacity int) *LRUCache {
+	return &LRUCache{
+		capacity: capacity,
+		data:     make(map[string]*pkg.Node),
+		order:    pkg.NewDoublyLinkedList(),
+	}
 }
 
-func (c *Cache) Get(key string) ([]byte, bool) {
-    val, exists := c.data[key]
-    return val, exists
+func (c *LRUCache) Get(key string) ([]byte, bool) {
+	if node, exists := c.data[key]; exists {
+		c.order.MoveToFront(node) // mark as recently used
+		return node.Value, true
+	}
+	return nil, false
 }
 
-func (c *Cache) Put(key string, value []byte) {
-    if _, exists := c.data[key]; exists {
-        c.data[key] = value
-        return
-    }
-    if len(c.order) >= c.cap {
-        oldest := c.order[0]
-        c.order = c.order[1:]
-        delete(c.data, oldest)
-    }
-    c.data[key] = value
-    c.order = append(c.order, key)
+func (c *LRUCache) Put(key string, value []byte) {
+	// If already exists, update & move to front
+	if node, exists := c.data[key]; exists {
+		node.Value = value
+		c.order.MoveToFront(node)
+		return
+	}
+
+	// If full, evict least recently used
+	if len(c.data) >= c.capacity {
+		evicted := c.order.PopBack()
+		if evicted != nil {
+			delete(c.data, evicted.Key)
+		}
+	}
+
+	// Insert new node
+	newNode := &pkg.Node{Key: key, Value: value}
+	c.order.PushFront(newNode)
+	c.data[key] = newNode
 }
