@@ -17,7 +17,7 @@ func main() {
 	strategy := config.Cfg.LoadBalancer.Strategy
 
 	// Create the reverse proxy
-	reverseProxy := proxy.NewReverseProxy(config.Cfg.Proxy.Targets, strategy)
+	reverseProxy := proxy.NewReverseProxy(config.Cfg.Proxy.Targets, strategy,config.Cfg.Cache.MaxSize)
 
 	// Start the server
 	port := config.Cfg.Server.Port
